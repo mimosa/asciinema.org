@@ -1,21 +1,28 @@
-source 'https://rubygems.org'
+# -*- encoding: utf-8 -*-
+source 'http://ruby.taobao.org'
 
 gem 'rails',                '4.1.5'
-
+gem 'rails-i18n'
+gem 'settingslogic'
 gem 'sass-rails',           '~> 4.0.3'
 gem 'coffee-rails',         '~> 4.0.1'
 gem 'uglifier',             '>= 2.3.1'
 gem 'jquery-rails',         '~> 3.0.4'
 
-gem 'pg',                   '~> 0.14'
-gem 'carrierwave',          '~> 0.8.0'
+gem 'mysql2' # 数据库
+gem 'carrierwave-qiniu'
 gem 'kaminari',             '~> 0.14.1'
 gem 'bugsnag',              '~> 2.2.1'
 gem 'draper',               '~> 1.3.1'
 gem 'fog',                  '~> 1.9.0'
 gem 'simple_form',          '~> 3.0.2'
 gem 'simple_form_bootstrap3', '~> 0.2.6'
-gem 'sidekiq',              '~> 3.2.2'
+# 队列
+gem 'sidekiq'
+gem 'sidekiq_monitor'
+%w(scheduler status).each do |g|
+  gem "sidekiq-#{g}"
+end
 gem 'thin',                 '~> 1.5.0'
 gem 'open4',                '~> 1.3.0'
 gem 'redcarpet',            '~> 2.2.2'
@@ -33,6 +40,10 @@ gem 'rack-rewrite',         '~> 1.5.0'
 
 group :development do
   gem 'quiet_assets',   '~> 1.0.1'
+  # Better errors handler
+  gem 'better_errors'
+  gem 'binding_of_caller'
+  gem 'meta_request'
   gem 'capistrano',     '~> 2.15'
   gem 'capistrano-ext', '~> 1.2'
   gem 'foreman',        '~> 0.63.0'
