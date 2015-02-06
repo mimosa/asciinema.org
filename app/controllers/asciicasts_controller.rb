@@ -1,7 +1,9 @@
-class AsciicastsController < ApplicationController
+# -*- encoding: utf-8 -*-
 
-  before_filter :load_resource, except: [:index]
-  before_filter :ensure_authenticated!, only: [:edit, :update, :destroy]
+class AsciicastsController < ApplicationController
+  force_ssl only: [:edit, :update]
+  before_action :load_resource, except: [:index]
+  before_action :ensure_authenticated!, only: [:edit, :update, :destroy]
 
   respond_to :html, :json
 

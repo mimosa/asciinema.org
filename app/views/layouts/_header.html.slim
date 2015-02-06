@@ -32,5 +32,13 @@ header.navbar.navbar-default.navbar-fixed-top[role="navigation"]
               li
                 a.logout href=logout_path Log out
         - else
-          li
-            a#log-in href=new_login_path Log in
+          li.dropdown
+              a#log-in.dropdown-toggle[href="#" data-toggle="dropdown"]
+                'Log in
+                b.caret
+              ul.dropdown-menu
+                li.fa-hover
+                  = link_to raw(t('.email')), new_login_path
+                  - unless Settings[:omniauth].nil?
+                    - Settings.omniauth_providers.each do |provider|
+                      = link_to raw(t(".#{provider}")), omniauth_authorize_url(provider: provider)

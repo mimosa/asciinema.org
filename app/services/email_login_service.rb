@@ -3,7 +3,7 @@ class EmailLoginService
   def login(email)
     user = User.for_email!(email)
     expiring_token = ExpiringToken.create_for_user(user)
-    Notifications.delay_login_request(expiring_token.user_id, expiring_token.token)
+    Notifier.delay.login_request(expiring_token.user_id, expiring_token.token)
     true
   rescue User::InvalidEmailError
     false

@@ -1,7 +1,7 @@
 module Api
   class AsciicastsController < BaseController
-
-    respond_to :html, only: [:show]
+    force_ssl only: :create
+    respond_to :html, only: :show
 
     attr_reader :asciicast
 
@@ -34,7 +34,7 @@ module Api
       username, token = authenticate_with_http_basic { |username, password| [username, password] }
 
       [
-        AsciicastParams.build(params[:asciicast].merge(meta: meta), request.user_agent),
+        AsciicastParams.build(params[:asciicast].merge(meta: meta), request),
         token || meta.delete('user_token'),
         username || meta.delete('username'),
       ]

@@ -4,7 +4,10 @@
       = horizontal_form_for @user do |f|
         legend Your settings
 
-        = f.input :username
+        .form-group.username.required.user_username
+          = f.label :username, required: true, class: 'col-sm-3 col-md-3 col-lg-2'
+          .col-sm-9.col-md-9.col-lg-10
+            = text_field_tag nil, f.object.username, required: true, readonly: true, class: 'string required form-control'
         = f.input :email, required: true
         = f.input :name, label: 'Real name'
         = f.input :theme_name, label: 'Terminal theme', collection: themes_for_select, include_blank: default_user_theme_label, hint: 'Used for all recordings unless custom theme chosen for a specific recording'

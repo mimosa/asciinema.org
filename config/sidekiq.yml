@@ -1,2 +1,15 @@
+# -*- encoding: utf-8 -*-
 ---
 :concurrency: 5
+:pidfile: ./tmp/pids/sidekiq.pid
+:logfile: ./log/sidekiq.log
+:dynamic: true
+:timeout: 30
+:verbose: false
+staging:
+  :concurrency: 10
+production:
+  :concurrency: 20
+:queues:
+  - default
+:daemon: true

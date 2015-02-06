@@ -1,6 +1,8 @@
-class UsernamesController < ApplicationController
+# -*- encoding: utf-8 -*-
 
-  before_filter :ensure_authenticated!
+class UsernamesController < ApplicationController
+  force_ssl only: [:new, :create], except: :skip
+  before_action :ensure_authenticated!
 
   def new
     @user = load_user

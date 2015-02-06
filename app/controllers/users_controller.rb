@@ -1,6 +1,8 @@
-class UsersController < ApplicationController
+# -*- encoding: utf-8 -*-
 
-  before_filter :ensure_authenticated!, :only => [:edit, :update]
+class UsersController < ApplicationController
+  force_ssl only: [:edit, :update], except: :show
+  before_action :ensure_authenticated!, only: [:edit, :update]
 
   attr_reader :user
 
@@ -33,7 +35,7 @@ class UsersController < ApplicationController
   private
 
   def update_params
-    params.require(:user).permit(:username, :name, :email, :theme_name)
+    params.require(:user).permit(:name, :email, :theme_name)
   end
 
 end

@@ -1,77 +1,118 @@
-class User < ActiveRecord::Base
+# -*- encoding: utf-8 -*-
 
-  USERNAME_FORMAT = /\A[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]\z/
+class User < Account
 
   InvalidEmailError = Class.new(StandardError)
 
-  has_many :api_tokens, :dependent => :destroy
-  has_many :asciicasts, :dependent => :destroy
-  has_many :comments, :dependent => :destroy
-  has_many :likes, :dependent => :destroy
-  has_many :api_tokens, :dependent => :destroy
-  has_many :asciicasts, :dependent => :destroy
-  has_many :comments, :dependent => :destroy
+  has_many :authorizations, dependent: :destroy
   has_many :expiring_tokens, dependent: :destroy
 
-  validates :email, presence: true, on: :update
-  validates :email, format: { with: /.+@.+\..+/i }, uniqueness: true, if: :email
+  has_many :asciicasts, dependent: :destroy
+  has_many :devices, dependent: :destroy
+
+  has_many :comments, dependent: :destroy
+  has_many :likes, dependent: :destroy
+  
+  validates :email, format: { with: /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i }, uniqueness: true, if: :email
   validates :username, uniqueness: { case_sensitive: false },
-                       format: { with: USERNAME_FORMAT },
+                       format: { with: /\A[-a-z0-9\p{Han}]+\Z/ },
                        length: { minimum: 2, maximum: 16 },
                        if: :username
 
   scope :with_username, -> { where('username IS NOT NULL') }
 
-  before_create :generate_auth_token
+  before_create :generate_access_token
 
-  def self.for_email!(email)
-    raise InvalidEmailError if email.blank?
+  class << self
+    def for_email!(email)
+      raise InvalidEmailError if email.blank?
 
-    self.where(email: email).first_or_create!
+      self.where(email: email).first_or_create!
 
-  rescue ActiveRecord::RecordInvalid => e
-    if e.record.errors[:email].present?
-      raise InvalidEmailError
-    else
-      raise e
+    rescue ActiveRecord::RecordInvalid => e
+      if e.record.errors[:email].present?
+        raise InvalidEmailError
+      else
+        raise e
+      end
     end
-  end
 
-  def self.for_username!(username)
-    with_username.where(username: username).first!
-  end
+    def for_username!(username)
+      with_username.where(username: username).first!
+    end
 
-  def self.for_api_token(token)
-    return nil if token.blank?
+    def for_udid(udid)
+      return nil if udid.blank?
 
-    joins(:api_tokens).where('api_tokens.token' => token).first
-  end
+      joins(:devices).where( devices: { udid: udid } ).first
+    end
 
-  def self.for_api_token!(token, username)
-    for_api_token(token) || create_with_token(token, username)
-  end
+    def for_udid!(udid, username)
+      for_udid(udid) || create_with_udid(udid, username)
+    end
+    # 
+    def for_access_token(access_token)
+      self.find_by(single_access_token: access_token)
+    end
+    # 
+    def for_oauth(auth)
+      return nil if auth.blank?
+      joins(:authorizations).where( authorizations: { uid: auth.uid, provider: auth.provider } ).first
+    end
+    #
+    def for_oauth!(auth, username)
+      for_oauth(auth) || create_with_oauth(auth, username)
+    end
+    # 注册设备，创建用户
+    def create_with_udid(udid, username)
+      return nil if udid.blank?
+      username = nil if username.blank?
 
-  def self.for_auth_token(auth_token)
-    where(auth_token: auth_token).first
-  end
+      transaction do |tx|
+        user = User.create!(temporary_username: username)
+        user.devices.create!(udid: udid)
+        user
+      end
+    end
+    # 通过第三方登录，创建用户
+    def create_with_oauth(auth, user = nil)
+      return nil if auth.blank?
 
-  def self.create_with_token(token, username)
-    return nil if token.blank?
-    username = nil if username.blank?
+      # 获取用户标识
+      identity = Authorization.find_for_oauth(auth)
+      # 已关联用户 或 指定关联用户
+      user = identity.user_id? ? identity.user : user
+      
+      email = auth.info.email
+      username = auth.extra.raw_info.nickname || auth.extra.raw_info.name
+      # 无关联用户，创建用户
+      if user.nil?
+        user = if email.present?
+          self.for_email!(email)
+        else
+          self.create!( temporary_username: username )
+        end
 
-    transaction do |tx|
-      user = User.create!(temporary_username: username)
-      user.api_tokens.create!(token: token)
+        if user.new_record?
+          user.update_attributes(username: username, temporary_username: nil)
+        end
+
+      end
+
+      # 关联第三方登录信息
+      if identity.user_id != user.id
+        identity.update_attributes(user_id: user.id)
+      end
       user
     end
-  end
 
-  def self.generate_auth_token
-    SecureRandom.urlsafe_base64
-  end
+    def generate_token
+      SecureRandom.urlsafe_base64
+    end
 
-  def self.null
-    new(temporary_username: 'anonymous')
+    def null
+      self.new(temporary_username: 'anonymous')
+    end
   end
 
   def confirmed?
@@ -90,22 +131,22 @@ class User < ActiveRecord::Base
     theme_name.presence && Theme.for_name(theme_name)
   end
 
-  def assign_api_token(token)
-    api_token = ApiToken.for_token(token)
+  def connect_device(udid)
+    device = Device.for_udid(udid)
 
-    if api_token
-      api_token.reassign_to(self)
+    if device
+      device.reassign_to(self)
     else
-      api_token = api_tokens.create!(token: token)
+      device = devices.create!(udid: udid)
     end
 
-    api_token
+    device
   end
-
+  # 合并用户
   def merge_to(target_user)
     self.class.transaction do |tx|
-      asciicasts.update_all(user_id: target_user.id, updated_at: DateTime.now)
-      api_tokens.update_all(user_id: target_user.id, updated_at: DateTime.now)
+      asciicasts.update_all(user_id: target_user.id, updated_at: Time.now)
+      devices.update_all(user_id: target_user.id, updated_at: Time.now)
       destroy
     end
   end
@@ -115,7 +156,7 @@ class User < ActiveRecord::Base
   end
 
   def asciicasts_excluding(asciicast, limit)
-    asciicasts.where('id <> ?', asciicast.id).order('RANDOM()').limit(limit)
+    asciicasts.where('id <> ?', asciicast.id).order('RAND()').limit(limit)
   end
 
   def paged_asciicasts(page, per_page)
@@ -135,10 +176,10 @@ class User < ActiveRecord::Base
 
   private
 
-  def generate_auth_token
+  def generate_access_token
     begin
-      self[:auth_token] = self.class.generate_auth_token
-    end while User.exists?(auth_token: self[:auth_token])
+      self[:single_access_token] = self.class.generate_token
+    end while User.exists?(single_access_token: self[:single_access_token])
   end
 
 end

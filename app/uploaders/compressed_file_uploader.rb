@@ -2,7 +2,6 @@ class CompressedFileUploader < BaseUploader
 
   def decompressed_path
     return unless file
-
     cache_stored_file! unless cached?
 
     out_path = "#{current_path}.decompressed"

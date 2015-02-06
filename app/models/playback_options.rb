@@ -1,12 +1,10 @@
-class PlaybackOptions
+# -*- encoding: utf-8 -*-
 
-  include Virtus.model
+class PlaybackOptions < ActiveInteraction::Base
 
-  attribute :speed,     Float,   default: 1.0
-  attribute :size,      String,  default: 'small'
-  attribute :autoplay,  Boolean, default: false
-  attribute :loop,      Boolean, default: false
-  attribute :benchmark, Boolean, default: false
-  attribute :theme,     String,  default: Theme::DEFAULT
+  string :size,  default: 'small'
+   float :speed, default: 1.0
+  boolean :autoplay, :loop, :benchmark, default: false
+  string :theme, default: Theme::DEFAULT
 
 end

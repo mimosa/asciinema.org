@@ -1,0 +1,2 @@
+web: bundle exec thin start -p 80
+ssl: bundle exec thin start -p 443 --ssl --ssl-key-file .ssl/asciicasts.cn.key --ssl-cert-file .ssl/asciicasts.cn.crt

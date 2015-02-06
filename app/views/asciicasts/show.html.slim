@@ -14,7 +14,7 @@
           small by #{page.author_link} #{time_ago_tag page.asciicast_created_at}
 
         .col-md-4.col-xs-4.text-right
-          = render 'shared/add_this', title: page.asciicast_title, url: asciicast_url(page.asciicast)
+          = social_share_button_tag(page.asciicast_title, url: asciicast_url(page.asciicast), desc: page.description, via: page.title, popup: true)
 
   section.odd.meta
     .container

@@ -1,18 +1,21 @@
 require 'authentication/warden_authentication'
 
 class ApplicationController < ActionController::Base
-
-  protect_from_forgery
-
+  protect_from_forgery with: :reset_session
   rescue_from ActiveRecord::RecordNotFound, with: :handle_not_found
   rescue_from Pundit::NotAuthorizedError, with: :handle_unauthorized
 
   helper_method :decorated_current_user
 
+  include Concerns::ForceNonSSL
   include WardenAuthentication
   include Pundit
 
   private
+
+  def default_url_options
+    {}
+  end
 
   def warden_strategies
     [:auth_cookie]

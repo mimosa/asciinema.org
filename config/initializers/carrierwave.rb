@@ -1,13 +1,16 @@
-CarrierWave.configure do |config|
-  if CFG.carrierwave_storage == 'fog'
-    config.storage = :fog
+# -*- encoding: utf-8 -*-
 
-    config.fog_credentials = {
-      :provider              => 'AWS',
-      :aws_access_key_id     => CFG.aws_access_key_id,
-      :aws_secret_access_key => CFG.aws_secret_access_key,
-      :region                => CFG.aws_region
-    }
-    config.fog_directory = CFG.aws_bucket
+# 配置文件上传系统
+if defined? ::CarrierWave && Settings[:carrierwave]
+  config = Settings.carrierwave
+  ::CarrierWave.configure do |c|
+    case config.storage
+    when 'qiniu' # 七牛，云存储
+      c.storage = :qiniu
+      c.qiniu_access_key = config.access_key
+      c.qiniu_secret_key = config.secret_key
+      c.qiniu_bucket = config.bucket
+      c.qiniu_bucket_domain = config.bucket_domain
+    end
   end
 end

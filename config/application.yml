@@ -1,0 +1,58 @@
+# -*- encoding: utf-8 -*-
+
+default: &default
+  redis:
+    url: redis://:sandbox@127.0.0.1:6379/0
+    driver: hiredis
+  carrierwave:
+    storage: qiniu
+    access_key: C07CGRRJan9-ie_MSG0U-f1gd1RmC4Rb9bOzOq5I
+    secret_key: qoKu4op6DoKhUtsihjPBvFHv4VgxJWSy-U8s1c_M
+    bucket: mmall
+    bucket_domain: m-cn.qiniudn.com
+  action_mailer:
+    method: goatmail
+    default:
+      charset: utf-8
+      content_type: text/html
+      from: asciicast <hello@asciicasts.cn>
+    default_url:
+      host: localhost
+      port: 3000
+  omniauth:
+    host: https://asciicasts.cn
+    github:
+      key: 9e75dc6b5a57a29be9bd
+      secret: 08de8d1f54713da721265b61ba2873c823a0e25f
+      scope: user:email
+    twitter:
+      key: HSkH5PbFLpoo4KN8Jkr0JQ
+      secret: ev7ZOd61Q2oisPfmKXNePGE0Ghp5LmiT8pjWWk4ho
+    linkedin:
+      key: 75kndzajip5zbb
+      secret: VqhN1FvQbLWmjuXY
+      scope: "r_basicprofile r_emailaddress"
+    google_oauth2:
+      key: 797378023057-of4u43tr3hqdum82t0qi625gqe7hqcoo.apps.googleusercontent.com
+      secret: w0z43h0C7VCsVqshLMu8B52B
+      scope: "email, profile, plus.me"
+    facebook:
+      key: 338420799680589
+      secret: c590e7c02ca3a1350e8e392d78765e76
+      scope: email
+      display: popup
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+
+production:
+  <<: *default
+  action_mailer:
+    method: mandrill
+    mandrill:
+      api_key: NQmOm-i2FAsYjUdD-8u8mg
+    default_url:
+      host: asciicasts.cn

@@ -10,11 +10,11 @@ module WardenAuthentication
   def current_user=(user)
     if user
       warden.set_user(user)
-      cookies[:auth_token] =
-        { value: user.auth_token, expires: 1.year.from_now }
+      cookies[:access_token] =
+        { value: user.single_access_token, expires: 1.year.from_now }
     else
       warden.logout
-      cookies.delete(:auth_token)
+      cookies.delete(:access_token)
     end
   end
 

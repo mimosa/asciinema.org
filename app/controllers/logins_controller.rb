@@ -1,12 +1,15 @@
-class LoginsController < ApplicationController
+# -*- encoding: utf-8 -*-
 
-  def new; end
+class LoginsController < ApplicationController
+  force_ssl except: :sent
+
+  def new
+  end
 
   def create
-    email = params[:email].strip
 
-    if login_service.login(email)
-      redirect_to sent_login_path, flash: { email_recipient: email }
+    if login_service.login(login_params)
+      redirect_to sent_login_path, flash: { email_recipient: params[:email] }
     else
       @invalid_email = true
       render :new
@@ -20,8 +23,12 @@ class LoginsController < ApplicationController
 
   private
 
-  def login_service
-    EmailLoginService.new
-  end
+    def login_params
+      params.require(:email)
+    end
+
+    def login_service
+      EmailLoginService.new
+    end
 
 end

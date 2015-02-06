@@ -1,18 +1,18 @@
 class AuthCookieStrategy < ::Warden::Strategies::Base
 
   def valid?
-    auth_token.present?
+    access_token.present?
   end
 
   def authenticate!
-    user = User.for_auth_token(auth_token)
+    user = User.for_access_token(access_token)
     user && success!(user)
   end
 
   private
 
-  def auth_token
-    request.cookies['auth_token']
+  def access_token
+    request.cookies['access_token']
   end
 
 end

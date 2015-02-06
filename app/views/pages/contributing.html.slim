@@ -122,10 +122,7 @@
       a href="https://twitter.com/asciinema" @asciinema
       '  on Twitter btw.
 
-    = render 'shared/add_this',
-      url: root_url,
-      title: 'asciinema - Record and share your terminal sessions, the right way',
-      big: true
+    = social_share_button_tag('asciinema', url: root_url, desc: 'asciinema - Record and share your terminal sessions, the right way', via: 'asciinema.org', popup: true)
 
   .col-md-4
     h2 Contribute by:

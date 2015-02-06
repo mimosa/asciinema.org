@@ -1,0 +1,30 @@
+footer
+  .container
+    .row
+      .col-md-4.col-xs-4
+        ul.links
+          li = link_to '关于本站', about_path
+          li = link_to '贡献者', contributing_path
+          li = link_to '服务条款', tos_path
+          li = link_to '隐私权政策', privacy_path
+
+      .col-md-4.col-xs-4.text-center
+        span
+          ' 合作伙伴
+          br
+          br
+          a href="http://upyun.com" rel="nofollow" target="_blank" = image_tag '//a.36krcnd.com/photo/2014/ba639550940bf943fb0467c5ea14fbc6.png'
+          br
+          br
+          a href="http://dnspod.cn" rel="nofollow" target="_blank" = image_tag '//a.36krcnd.com/photo/2014/0ae4f92e9796a8a8a8cfe97a2c29d1b2.png'
+
+      .col-md-4.col-xs-4.text-right
+        p
+          ' Follow
+          = link_to '@asciinema', 'https://twitter.com/asciinema', title: 'Follow @asciinema on Twitter'
+          '  on Twitter
+          = link_to image_tag('twitter-black.png'), 'https://twitter.com/asciinema', title: 'Follow @asciinema on Twitter'
+
+        p
+          ' Developed with passion by
+          = link_to 'Marcin Kulik', 'http://ku1ik.com'

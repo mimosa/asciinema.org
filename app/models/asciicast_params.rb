@@ -1,6 +1,8 @@
+# -*- encoding: utf-8 -*-
+
 class AsciicastParams
 
-  def self.build(params, user_agent)
+  def self.build(params, request)
     meta = params[:meta]
 
     attributes = {
@@ -20,7 +22,7 @@ class AsciicastParams
     if meta['uname'] # old client, with useless, random user_agent
       attributes[:uname] = meta['uname']
     else
-      attributes[:user_agent] = user_agent
+      attributes[:user_agent] = request.user_agent
     end
 
     attributes
