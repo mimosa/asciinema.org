@@ -1,6 +1,6 @@
 module Api
   class AsciicastsController < BaseController
-    force_ssl only: :create
+    # force_ssl only: :create
     respond_to :html, only: :show
 
     attr_reader :asciicast

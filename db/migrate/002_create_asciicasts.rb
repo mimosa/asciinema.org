@@ -2,11 +2,11 @@
 
 class CreateAsciicasts < ActiveRecord::Migration
   def change
-    create_table :asciicasts, id: false do |t|
-      t.uuid :id, primary_key: true, index: true
-      t.uuid :user_id, index: true
+    create_table :asciicasts do |t|
+      t.references :user, index: true
       t.foreign_key :accounts, column: :user_id, dependent: :delete
       t.string :title
+      t.string :slug, limit: 64
       t.float :duration, null: false
       t.string :terminal_type
       t.integer :terminal_columns, null: false
@@ -24,7 +24,8 @@ class CreateAsciicasts < ActiveRecord::Migration
       t.integer :likes_count, null: false, default: 0
       t.integer :views_count, null: false, default: 0
       t.integer :comments_count, null: false, default: 0
-      t.text :description
+      t.text :body
+      t.text :body_html # Markdown 格式化后的 html
       t.text :snapshot
       t.timestamps
       t.string :user_agent

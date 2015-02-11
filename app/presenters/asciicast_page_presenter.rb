@@ -50,7 +50,7 @@ class AsciicastPagePresenter
   end
 
   def embed_script(routes)
-    src = routes.asciicast_url(asciicast, format: :js)
+    src = routes.asciicast_url(asciicast.id, format: :js)
     id = "asciicast-#{asciicast.id}"
     %(<script type="text/javascript" src="#{src}" id="#{id}" async></script>)
   end
@@ -78,12 +78,20 @@ class AsciicastPagePresenter
     asciicast.featured? && policy.unfeature?
   end
 
-  def show_description?
-    asciicast.description.present?
+  def show_body?
+    asciicast.body.present?
   end
 
-  def description
-    asciicast.description
+  def body
+    asciicast.body
+  end
+
+  def body_html
+    asciicast.body_html
+  end
+
+  def body_text
+    asciicast.body_text
   end
 
   def show_other_asciicasts_by_author?
@@ -96,8 +104,8 @@ class AsciicastPagePresenter
 
   private
 
-  def author
-    asciicast.user
-  end
+    def author
+      asciicast.user
+    end
 
 end

@@ -6,6 +6,11 @@ class CompressedFileUploader < BaseUploader
 
     out_path = "#{current_path}.decompressed"
 
+    unless File.exist?(current_path)
+      FileUtils.mkdir_p File.dirname(current_path)
+      File.open(current_path, 'w') { |f| f.write file.read }
+    end
+
     unless File.exist?(out_path)
       decompress(out_path)
     end

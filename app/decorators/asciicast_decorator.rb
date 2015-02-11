@@ -37,11 +37,16 @@ class AsciicastDecorator < ApplicationDecorator
     h.render 'asciicasts/thumbnail', :thumbnail => thumbnail
   end
 
-  def description
-    if model.description.present?
-      text = model.description.to_s
-      markdown(text)
-    end
+  def body
+    model.body.to_s if model.body.present?
+  end
+
+  def body_html
+    model.body_html.html_safe if model.body_html.present?
+  end
+
+  def body_text
+    h.strip_tags body_html if body_html.present?
   end
 
   def author_link
@@ -66,25 +71,25 @@ class AsciicastDecorator < ApplicationDecorator
 
   private
 
-  def os_from_user_agent
-    os_part = user_agent.split(' ')[2]
-    os = os_part.split('/').first
+    def os_from_user_agent
+      os_part = user_agent.split(' ')[2]
+      os = os_part.split('/').first
 
-    guess_os(os)
-  end
-
-  def os_from_uname
-    guess_os(uname)
-  end
-
-  def guess_os(text)
-    if text =~ /Linux/i
-      'Linux'
-    elsif text =~ /Darwin/i
-      'OS X'
-    else
-      text.split(/[\s-]/, 2)[0].to_s.titleize
+      guess_os(os)
     end
-  end
+
+    def os_from_uname
+      guess_os(uname)
+    end
+
+    def guess_os(text)
+      if text =~ /Linux/i
+        'Linux'
+      elsif text =~ /Darwin/i
+        'OS X'
+      else
+        text.split(/[\s-]/, 2)[0].to_s.titleize
+      end
+    end
 
 end

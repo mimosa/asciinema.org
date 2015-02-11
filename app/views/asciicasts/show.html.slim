@@ -1,4 +1,4 @@
-- content_for(:title, page.title)
+- set_meta_tags title: page.title, description: page.body_text
 
 .asciicast-page
   section.cinema
@@ -14,7 +14,7 @@
           small by #{page.author_link} #{time_ago_tag page.asciicast_created_at}
 
         .col-md-4.col-xs-4.text-right
-          = social_share_button_tag(page.asciicast_title, url: asciicast_url(page.asciicast), desc: page.description, via: page.title, popup: true)
+          = social_share_button_tag(page.asciicast_title, url: asciicast_url(page.asciicast), desc: page.body_text, via: page.title, popup: true)
 
   section.odd.meta
     .container
@@ -71,10 +71,10 @@
           br
           | See the #{link_to 'embedding docs', docs_path(:embedding)} for more options.
 
-  - if page.show_description?
-    section.odd.description
+  - if page.show_body?
+    section.odd.body
       .container
-        .content = page.description
+        .content = page.body_html
 
   - if page.show_other_asciicasts_by_author?
     section.even

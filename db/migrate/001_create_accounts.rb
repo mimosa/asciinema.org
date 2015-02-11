@@ -2,8 +2,7 @@
 
 class CreateAccounts < ActiveRecord::Migration
   def change
-    create_table :accounts, id: false do |t|
-      t.uuid :id, primary_key: true, index: true
+    create_table :accounts do |t|
       t.string :email, limit: 128 # 电邮
       t.string :mobile, limit: 128 # 手机
       t.string :name, limit: 16 # 姓名

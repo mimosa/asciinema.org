@@ -11,7 +11,7 @@ class UsernamesController < ApplicationController
   def create
     @user = load_user
 
-    if @user.update(username: params[:user][:username].strip)
+    if @user.update(update_params)
       redirect_to_profile(@user)
     else
       @invalid_username = true
@@ -31,6 +31,10 @@ class UsernamesController < ApplicationController
 
   def redirect_to_profile(user)
     redirect_back_or_to profile_path(user)
+  end
+
+  def update_params
+    params.require(:user).permit(:username)
   end
 
 end

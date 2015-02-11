@@ -22,6 +22,7 @@ module Asciinema
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
     config.time_zone = 'Asia/Shanghai'
     config.active_record.default_timezone = :local
+    config.active_record.timestamped_migrations = false
     config.beginning_of_week = :monday
 
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.

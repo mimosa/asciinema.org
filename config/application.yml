@@ -2,7 +2,7 @@
 
 default: &default
   redis:
-    url: redis://:sandbox@127.0.0.1:6379/0
+    url: redis://127.0.0.1:6379/0
     driver: hiredis
   carrierwave:
     storage: qiniu

@@ -3,7 +3,7 @@
 class CreateExpiringTokens < ActiveRecord::Migration
   def change
     create_table :expiring_tokens do |t|
-      t.uuid :user_id, null: false, index: true
+      t.references :user, null: false, index: true
       t.foreign_key :accounts, column: :user_id, dependent: :delete
       
       t.string :token, null: false, limit: 128

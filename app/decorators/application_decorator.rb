@@ -1,9 +1,10 @@
+# -*- encoding: utf-8 -*-
 class ApplicationDecorator < Draper::Decorator
 
   delegate_all
 
   def markdown(text)
-    MKD_SAFE_RENDERER.render(text).html_safe
+    MarkdownService.call(text)
   end
 
 end

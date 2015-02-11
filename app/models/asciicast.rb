@@ -1,8 +1,16 @@
 # -*- encoding: utf-8 -*-
 
 class Asciicast < ActiveRecord::Base
-  include ActiveUUID::UUID
   belongs_to :user
+
+  extend FriendlyId
+  friendly_id :title
+  def normalize_friendly_id(input)
+    input.to_s.to_slug.normalize.to_s
+  end
+  def should_generate_new_friendly_id?
+    self.new_record? || self.title_changed?
+  end
 
   has_many :comments, -> { order(:created_at) }, dependent: :destroy
   has_many :likes, dependent: :destroy
@@ -72,4 +80,11 @@ class Asciicast < ActiveRecord::Base
     theme_name.presence && Theme.for_name(theme_name)
   end
 
+  before_save :markdown_to_html, if: :body_changed?
+
+  private
+
+    def markdown_to_html
+      self.body_html ||= MarkdownService.call(self.body)
+    end
 end
