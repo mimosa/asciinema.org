@@ -41,6 +41,19 @@ default: &default
       secret: c590e7c02ca3a1350e8e392d78765e76
       scope: email
       display: popup
+  analytics:
+    google:
+      site_id: UA-59679824-1
+    baidu:
+      site_id: 2e26eabe5c5e01f72db12fc51d52a0f0
+    cnzz:
+      site_id: 1254402387
+    qq:
+      site_id: 42749939
+    qbaka:
+      key: 5dd468e2ca0fa0c015677fbc2e2da5ed
+    trackjs:
+      token: 73f5d3555f0d4c6186b376f77ca61d31
 
 development:
   <<: *default

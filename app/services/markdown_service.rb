@@ -10,10 +10,29 @@ class MarkdownService
       super(
         extensions.merge({
           filter_html: true,
-          hard_wrap: true, 
           link_attributes: { rel: 'nofollow', target: '_blank' }
         })
       )
+    end
+  end
+
+  class Template < Tilt::RedcarpetTemplate
+    self.default_mime_type = 'text/x-markdown'
+
+    def self.engine_initialized?
+      defined? ::Redcarpet::Markdown and defined? ::Rouge::Plugins::Redcarpet
+    end
+
+    def prepare
+      @output = nil
+    end
+
+    def evaluate(scope, locals, &block)
+      @output ||= ::MarkdownService.call(data)
+    end
+
+    def allows_script?
+      false
     end
   end
 
@@ -40,9 +59,16 @@ class MarkdownService
     end
 
     def render
-      renderer.render(markdown).html_safe
+      # Rails.cache.fetch cache_key do
+        renderer.render(markdown).html_safe
+      # end
     end
 
+    def cache_key
+      sha ||= Digest::SHA1.hexdigest(markdown)
+      ['markdown', sha].join('-')
+    end
+    
     def extensions
       {
         autolink: true,

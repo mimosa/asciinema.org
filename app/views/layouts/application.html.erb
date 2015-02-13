@@ -24,6 +24,6 @@
         <%= content_for?(:content) ? yield(:content) : yield %>
     </div>
     <%= render 'layouts/footer' %> 
-    <%= render 'layouts/analytics' %> 
+    <%= render 'layouts/analytics' unless Settings[:analytics].nil? %> 
 </body>
 </html>
