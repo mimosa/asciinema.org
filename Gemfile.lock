@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/mimosa/carrierwave-qiniu.git
-  revision: db7a689852f5e076a0eedb1a792d10448484aff0
+  revision: 843b827fee826202bc047a780b4c9de8dbb10004
   specs:
     carrierwave-qiniu (0.1.6)
       carrierwave

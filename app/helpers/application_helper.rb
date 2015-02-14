@@ -1,5 +1,11 @@
 module ApplicationHelper
 
+  def markdown(&block)
+    raise ArgumentError, "Missing block" unless block_given?
+    content = capture(&block)
+    Tilt['markdown'].new { content }.render
+  end
+
   class CategoryLinks
 
     def initialize(current_category, view_context)
@@ -45,7 +51,7 @@ module ApplicationHelper
 
   def time_ago_tag(time, options = {})
     options[:class] ||= "timeago"
-    content_tag(:abbr, time.to_s, options.merge(:title => time.getutc.iso8601))
+    content_tag(:abbr, time.to_s, options.merge(title: time.getutc.iso8601))
   end
 
   def default_user_theme_label(theme = Theme.default)
@@ -58,6 +64,21 @@ module ApplicationHelper
 
   def themes_for_select
     Theme::AVAILABLE.invert
+  end
+
+  # 可按需修改
+  LANGUAGES_LISTS = { "Ruby" => "ruby", "HTML / ERB" => "erb", "CSS / SCSS" => "scss", "JavaScript" => "js",
+                      "YAML <i>(.yml)</i>" => "yml", "CoffeeScript" => "coffee", "Nginx / Redis <i>(.conf)</i>" => "conf",
+                      "Python" => "python", "PHP" => "php", "Java" => "java", "Erlang" => "erlang", "Shell / Bash" => "shell" }
+
+  def insert_code_menu_items_tag
+    langs = []
+    LANGUAGES_LISTS.each do |name, lng|
+      langs << content_tag(:li) do
+        content_tag(:a, raw(name), id: lng, class: 'insert_code', data: { content: lng })
+      end
+    end
+    raw langs.join("")
   end
 
   def flash_notifications

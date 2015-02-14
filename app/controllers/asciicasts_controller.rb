@@ -65,20 +65,20 @@ class AsciicastsController < ApplicationController
 
   private
 
-  def load_resource
-    @asciicast = Asciicast.find(params[:id])
-  end
+    def load_resource
+      @asciicast = Asciicast.find(params[:id])
+    end
 
-  def view_counter
-    @view_counter ||= ViewCounter.new
-  end
+    def view_counter
+      @view_counter ||= ViewCounter.new
+    end
 
-  def update_params
-    params.require(:asciicast).permit(*policy(asciicast).permitted_attributes)
-  end
+    def update_params
+      params.require(:asciicast).permit(*policy(asciicast).permitted_attributes)
+    end
 
-  def asciicast_updater
-    AsciicastUpdater.new
-  end
+    def asciicast_updater
+      AsciicastUpdater.new
+    end
 
 end

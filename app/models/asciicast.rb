@@ -85,6 +85,6 @@ class Asciicast < ActiveRecord::Base
   private
 
     def markdown_to_html
-      self.body_html ||= MarkdownService.call(self.body)
+      self.body_html = MarkdownService.call(self.body)
     end
 end

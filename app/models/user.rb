@@ -10,6 +10,7 @@ class User < Account
   has_many :asciicasts, dependent: :destroy
   has_many :devices, dependent: :destroy
 
+  has_many :photos, dependent: :destroy
   has_many :comments, dependent: :destroy
   has_many :likes, dependent: :destroy
   

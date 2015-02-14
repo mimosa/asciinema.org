@@ -1,3 +1,5 @@
+# -*- encoding: utf-8 -*-
+
 Rails.application.routes.draw do
 
   get "/browse" => "asciicasts#index", as: :browse
@@ -6,14 +8,17 @@ Rails.application.routes.draw do
   get '/a/:id.js', to: redirect(ActionController::Base.helpers.asset_path('widget.js'), status: 301)
 
   resources :asciicasts, path: 'a' do
+    resources :photos, imageable_type: :asciicast
     member do
       get '/raw', to: 'api/asciicasts#show'
       get :example
     end
   end
-
+  resources :photos
   get "/u/:id" => "users#show", as: :unnamed_user
   get "/~:username" => "users#show", as: :public_profile
+
+  post ":formater/preview", to: "previews#create", constraints: { formater: /markdown/ }
 
   namespace :api do
     resources :asciicasts

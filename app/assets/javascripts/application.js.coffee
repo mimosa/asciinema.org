@@ -4,6 +4,7 @@
 #= require jquery-timeago/jquery.timeago
 #= require bootstrap-sass-official/assets/javascripts/bootstrap-sprockets
 #= require social-share-button
+#= require markdown_editor
 
 $ ->
   $('abbr.timeago').timeago()

@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 
-asset 'jquery'
+asset 'jquery', '1.11.1'
 asset 'jquery-ujs'
 asset 'jquery-timeago'
 asset 'screenfull'
@@ -8,3 +8,5 @@ asset 'fontawesome'
 asset 'bootstrap-sass-official'
 asset 'underscore'
 asset 'backbone'
+asset 'Caret.js'
+asset 'At.js'

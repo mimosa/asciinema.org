@@ -25,16 +25,16 @@ class UsernamesController < ApplicationController
 
   private
 
-  def load_user
-    User.find(current_user.id)
-  end
+    def load_user
+      User.find(current_user.id)
+    end
 
-  def redirect_to_profile(user)
-    redirect_back_or_to profile_path(user)
-  end
+    def redirect_to_profile(user)
+      redirect_back_or_to profile_path(user)
+    end
 
-  def update_params
-    params.require(:user).permit(:username)
-  end
+    def update_params
+      params.require(:user).permit(:username)
+    end
 
 end

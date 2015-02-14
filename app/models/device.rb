@@ -22,8 +22,8 @@ class Device < ActiveRecord::Base
 
   private
 
-  def udid?
-    user.confirmed?
-  end
+    def udid?
+      user.confirmed?
+    end
 
 end

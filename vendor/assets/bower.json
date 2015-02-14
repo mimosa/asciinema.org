@@ -1,13 +1,15 @@
 {
   "name": "dsl-generated dependencies",
   "dependencies": {
-    "jquery": "latest",
+    "jquery": "1.11.1",
     "jquery-ujs": "latest",
     "jquery-timeago": "latest",
     "screenfull": "latest",
     "fontawesome": "latest",
     "bootstrap-sass-official": "latest",
     "underscore": "latest",
-    "backbone": "latest"
+    "backbone": "latest",
+    "Caret.js": "latest",
+    "At.js": "latest"
   }
 }
