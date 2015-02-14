@@ -22,3 +22,4 @@ public/uploads/*
 /coverage
 .rbx
 .env
+/uploads/*
