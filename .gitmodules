@@ -1,6 +1,0 @@
-[submodule "vendor/assets/bower_components"]
-  path = vendor/assets/bower_components
-  url = git://coding.net/asciicasts/bower_components.git
-[submodule "bower_components"]
-	path = vendor/assets/bower_components
-	url = git://coding.net/asciicasts/bower_components.git
